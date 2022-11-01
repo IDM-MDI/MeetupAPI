@@ -21,6 +21,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.modsen</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.modsen</groupId>
+            <artifactId>service</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>

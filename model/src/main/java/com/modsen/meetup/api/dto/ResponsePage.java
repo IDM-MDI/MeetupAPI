@@ -9,9 +9,5 @@ import java.util.List;
 @Builder
 public class ResponsePage <T> {
     private List<T> data;
-    private long page;
-    private long size;
-    private String filter;
-    private String sort;
-    private String direction;
+    private PaginationInfo paginationInfo;
 }
