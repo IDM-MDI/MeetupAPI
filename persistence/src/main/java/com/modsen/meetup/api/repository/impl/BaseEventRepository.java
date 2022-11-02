@@ -18,8 +18,29 @@ public class BaseEventRepository implements EventRepository {
     }
     @Override
     public Event findByID(long id) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        return session.find(Event.class, id);
+        try (Session session = sessionFactory.openSession();){
+            session.beginTransaction();
+            return session.find(Event.class, id);
+        }
+    }
+
+    @Override
+    public boolean isEventExistByID(long id) {
+        return false;
+    }
+
+    @Override
+    public Event save(Event event) {
+        return null;
+    }
+
+    @Override
+    public Event update(Event event) {
+        return null;
+    }
+
+    @Override
+    public Event delete(long id) {
+        return null;
     }
 }

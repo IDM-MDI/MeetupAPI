@@ -1,21 +1,31 @@
 package com.modsen.meetup.api.controller;
 
+import com.modsen.meetup.api.dto.EventDto;
+import com.modsen.meetup.api.dto.PaginationInfo;
+import com.modsen.meetup.api.dto.ResponsePage;
+import com.modsen.meetup.api.service.EventService;
+import com.modsen.meetup.api.util.PaginationUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static com.modsen.meetup.api.util.PaginationUtil.paginationFilter;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/event")
 public class EventController {
+    private final EventService service;
+
+    @Autowired
+    public EventController(EventService service) {
+        this.service = service;
+    }
 
     @GetMapping()
-    public ResponseEntity<String> getEvents() {
-        return ResponseEntity.ok("get events");
+    public ResponsePage<EventDto> getEvents(@RequestParam(required = false) PaginationInfo pagination) {
+        return service.findByPage(paginationFilter(pagination));
     }
 
     @PostMapping

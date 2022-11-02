@@ -2,14 +2,13 @@ package com.modsen.meetup.api.service;
 
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
-
-import java.util.List;
+import com.modsen.meetup.api.dto.ResponsePage;
 
 public interface EventService {
     boolean isEventExistByID(long id);
-    EventDto findByID(long id);
-    List<EventDto> findByPage(PaginationInfo paginationInfo);
-    EventDto save(EventDto event);
-    EventDto update(EventDto event);
-    void delete(long id);
+    ResponsePage<EventDto> findByID(long id);
+    ResponsePage<EventDto> findByPage(PaginationInfo paginationInfo);
+    ResponsePage<EventDto> save(EventDto event);
+    ResponsePage<EventDto> update(EventDto event);
+    ResponsePage<EventDto> delete(long id);
 }

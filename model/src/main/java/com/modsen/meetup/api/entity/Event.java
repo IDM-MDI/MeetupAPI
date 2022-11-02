@@ -2,8 +2,6 @@ package com.modsen.meetup.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,8 +30,12 @@ public class Event {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "managerID")
     private Manager manager;
+
+    @ManyToOne
+    @JoinColumn(name = "venueID")
+    private Venue venue;
 
     @Column(name = "topic")
     private String topic;

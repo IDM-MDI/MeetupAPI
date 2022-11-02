@@ -2,21 +2,23 @@ package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
+import com.modsen.meetup.api.dto.ResponsePage;
+import com.modsen.meetup.api.repository.EventRepository;
 import com.modsen.meetup.api.service.EventService;
 import com.modsen.meetup.api.service.ManagerService;
 import com.modsen.meetup.api.service.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class BaseEventService implements EventService {
-    private ManagerService managerService;
-    private VenueService venueService;
+    private final EventRepository repository;
+    private final ManagerService managerService;
+    private final VenueService venueService;
 
     @Autowired
-    public BaseEventService(ManagerService managerService, VenueService venueService) {
+    public BaseEventService(EventRepository repository, ManagerService managerService, VenueService venueService) {
+        this.repository = repository;
         this.managerService = managerService;
         this.venueService = venueService;
     }
@@ -27,27 +29,28 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public EventDto findByID(long id) {
+    public ResponsePage<EventDto> findByID(long id) {
+        repository.findByID(id);
         return null;
     }
 
     @Override
-    public List<EventDto> findByPage(PaginationInfo paginationInfo) {
+    public ResponsePage<EventDto> findByPage(PaginationInfo paginationInfo) {
         return null;
     }
 
     @Override
-    public EventDto save(EventDto event) {
+    public ResponsePage<EventDto> save(EventDto event) {
         return null;
     }
 
     @Override
-    public EventDto update(EventDto event) {
+    public ResponsePage<EventDto> update(EventDto event) {
         return null;
     }
 
     @Override
-    public void delete(long id) {
-
+    public ResponsePage<EventDto> delete(long id) {
+        return null;
     }
 }
