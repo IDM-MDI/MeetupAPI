@@ -1,13 +1,13 @@
 package com.modsen.meetup.api.service.impl;
 
-import com.modsen.meetup.api.dto.ManagerDto;
+import com.modsen.meetup.api.dto.VenueDto;
 import com.modsen.meetup.api.service.VenueService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BaseVenueService implements VenueService {
     @Override
-    public String findByID(long id) {
+    public VenueDto findByID(long id) {
         return null;
     }
 
@@ -22,7 +22,7 @@ public class BaseVenueService implements VenueService {
     }
 
     @Override
-    public void save(ManagerDto manager) {
-
+    public VenueDto save(VenueDto venue) {
+        return null;
     }
 }

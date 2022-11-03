@@ -3,6 +3,7 @@ package com.modsen.meetup.api.controller;
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.dto.ResponsePage;
+import com.modsen.meetup.api.exception.ModelException;
 import com.modsen.meetup.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +21,18 @@ public class EventController {
     }
 
     @GetMapping()
-    public ResponsePage<EventDto> getEvents(@RequestParam(required = false) PaginationInfo pagination) {
-        return service.findByPage(paginationFilter(pagination));
+    public ResponsePage<EventDto> getActiveEvents(@RequestParam(required = false) PaginationInfo pagination) {
+        return service.findByActivePage(paginationFilter(pagination));
     }
 
     @PostMapping
-    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) {
+    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) throws ModelException {
         return service.save(event);
     }
 
     @PutMapping("/{id}")
     public ResponsePage<EventDto> updateEvent(@PathVariable long id,
-                                              @RequestBody EventDto event) {
+                                              @RequestBody EventDto event) throws ModelException {
         return service.update(event,id);
     }
 

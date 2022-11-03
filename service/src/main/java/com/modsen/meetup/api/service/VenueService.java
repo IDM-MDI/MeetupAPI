@@ -1,10 +1,10 @@
 package com.modsen.meetup.api.service;
 
-import com.modsen.meetup.api.dto.ManagerDto;
+import com.modsen.meetup.api.dto.VenueDto;
 
 public interface VenueService {
-    String findByID(long id);
+    VenueDto findByID(long id);
     boolean isVenueExistByID(long id);
     boolean isVenueExistByName(String name);
-    void save(ManagerDto manager);
+    VenueDto save(VenueDto venue);
 }
