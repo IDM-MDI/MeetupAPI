@@ -52,10 +52,7 @@ public class BaseManagerRepository implements ManagerRepository {
     @Override
     public Manager save(Manager manager) {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            Manager savedManager = (Manager) session.save(manager);
-            session.getTransaction().commit();
-            return savedManager;
+            return (Manager) session.save(manager);
         }
     }
 }
