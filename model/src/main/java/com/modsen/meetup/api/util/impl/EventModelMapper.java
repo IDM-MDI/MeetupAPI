@@ -31,6 +31,7 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
             throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return Event.builder()
+                .id(dto.getId())
                 .manager(managerMapper.toEntity(dto.getManager()))
                 .topic(dto.getTopic())
                 .description(dto.getDescription())
@@ -45,6 +46,7 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
             throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return EventDto.builder()
+                .id(entity.getId())
                 .manager(managerMapper.toDto(entity.getManager()))
                 .topic(entity.getTopic())
                 .description(entity.getDescription())

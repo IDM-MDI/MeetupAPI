@@ -1,10 +1,12 @@
 package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.EventDto;
+import com.modsen.meetup.api.dto.ManagerDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.dto.ResponsePage;
 import com.modsen.meetup.api.entity.Event;
 import com.modsen.meetup.api.exception.ModelException;
+import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.EventRepository;
 import com.modsen.meetup.api.service.EventService;
 import com.modsen.meetup.api.service.ManagerService;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static com.modsen.meetup.api.entity.EntityName.EVENT;
 import static com.modsen.meetup.api.entity.EntityStatus.ACTIVE;
+import static com.modsen.meetup.api.validator.EventValidator.isEventDtoValid;
 
 @Service
 public class BaseEventService implements EventService {
@@ -41,7 +44,10 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public ResponsePage<EventDto> findByID(long id) throws ModelException {
+    public ResponsePage<EventDto> findByID(long id) throws ModelException, ServiceException {
+        if(!repository.isEventExistByID(id)) {
+            throw new ServiceException(""); //TODO:FINISH EXCEPTION MESSAGE
+        }
         return ResponsePage.<EventDto>builder()
                 .data(List.of(eventMapper.toDto(repository.findByID(id))))
                 .status(ResponseStatusUtil.byIdFoundResponse(EVENT.toString()))
@@ -58,7 +64,13 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public ResponsePage<EventDto> save(EventDto event) throws ModelException {
+    public ResponsePage<EventDto> save(EventDto event) throws ModelException, ServiceException {
+        if (!isEventDtoValid(event)) {
+            throw new ServiceException(""); //TODO:FINISH EXCEPTION MESSAGE
+        }
+        event.setManager(managerService.save(event.getManager()));
+        event.setVenue(venueService.save(event.getVenue()));
+
         return ResponsePage.<EventDto>builder()
                 .data(List.of(eventMapper.toDto(repository.save(eventMapper.toEntity(event)))))
                 .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
@@ -69,6 +81,7 @@ public class BaseEventService implements EventService {
     public ResponsePage<EventDto> update(EventDto event, long id) throws ModelException {
         Event updatableEvent = eventMapper.toEntity(event);
         updatableEvent.setId(id);
+
         return ResponsePage.<EventDto>builder()
                 .data(List.of(eventMapper.toDto(repository.update(updatableEvent))))
                 .status(ResponseStatusUtil.updateResponse(EVENT.toString()))

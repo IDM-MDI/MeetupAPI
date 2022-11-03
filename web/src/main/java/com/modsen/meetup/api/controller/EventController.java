@@ -4,6 +4,7 @@ import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.dto.ResponsePage;
 import com.modsen.meetup.api.exception.ModelException;
+import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,18 +27,18 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) throws ModelException {
+    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) throws ModelException, ServiceException {
         return service.save(event);
     }
 
     @PutMapping("/{id}")
     public ResponsePage<EventDto> updateEvent(@PathVariable long id,
-                                              @RequestBody EventDto event) throws ModelException {
+                                              @RequestBody EventDto event) throws ModelException, ServiceException {
         return service.update(event,id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) throws ModelException {
+    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) throws ModelException, ServiceException {
         return service.delete(id);
     }
 }

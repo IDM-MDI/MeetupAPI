@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class EventDto {
+    private long id;
     private ManagerDto manager;
     private String topic;
     private String description;

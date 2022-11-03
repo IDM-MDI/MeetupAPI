@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class VenueDto {
+    private long id;
     private String name;
 }

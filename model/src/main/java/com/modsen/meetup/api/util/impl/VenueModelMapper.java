@@ -21,6 +21,7 @@ public class VenueModelMapper implements ModelMapper<Venue, VenueDto> {
             throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return Venue.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .build();
     }
@@ -31,6 +32,7 @@ public class VenueModelMapper implements ModelMapper<Venue, VenueDto> {
             throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return VenueDto.builder()
+                .id(entity.getId())
                 .name(entity.getName())
                 .build();
     }

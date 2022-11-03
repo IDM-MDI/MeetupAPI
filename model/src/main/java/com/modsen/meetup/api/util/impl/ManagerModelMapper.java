@@ -20,6 +20,7 @@ public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
             throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return Manager.builder()
+                .id(dto.getId())
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .lastname(dto.getLastname())
@@ -30,9 +31,10 @@ public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
     @Override
     public ManagerDto toDto(Manager entity) throws ModelException {
         if(Objects.isNull(entity)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());           //TODO FINISH EXCEPTION MESSAGE
+            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
         }
         return ManagerDto.builder()
+                .id(entity.getId())
                 .name(entity.getName())
                 .surname(entity.getSurname())
                 .lastname(entity.getLastname())
