@@ -9,6 +9,6 @@ public interface EventService {
     ResponsePage<EventDto> findByID(long id);
     ResponsePage<EventDto> findByPage(PaginationInfo paginationInfo);
     ResponsePage<EventDto> save(EventDto event);
-    ResponsePage<EventDto> update(EventDto event);
+    ResponsePage<EventDto> update(EventDto event, long id);
     ResponsePage<EventDto> delete(long id);
 }

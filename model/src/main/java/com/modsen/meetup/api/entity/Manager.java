@@ -36,6 +36,6 @@ public class Manager {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "fullName", unique = true, nullable = false)
+    private String fullName;
 }

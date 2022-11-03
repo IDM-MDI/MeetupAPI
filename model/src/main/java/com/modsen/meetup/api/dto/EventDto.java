@@ -12,5 +12,5 @@ public class EventDto {
     private String topic;
     private String description;
     private LocalDateTime date;
-    private String venue;
+    private VenueDto venue;
 }

@@ -45,4 +45,7 @@ public class Event {
 
     @Column(name = "date")
     private LocalDateTime date;
+
+    @Column(name = "status")
+    private String status;
 }

@@ -25,7 +25,7 @@ public class BaseEventService implements EventService {
 
     @Override
     public boolean isEventExistByID(long id) {
-        return false;
+        return repository.isEventExistByID(id);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public ResponsePage<EventDto> update(EventDto event) {
+    public ResponsePage<EventDto> update(EventDto event, long id) {
         return null;
     }
 
