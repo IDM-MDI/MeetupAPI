@@ -2,7 +2,9 @@ package com.modsen.meetup.api.repository.impl;
 
 import com.modsen.meetup.api.entity.Venue;
 import com.modsen.meetup.api.repository.VenueRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class BaseVenueRepository implements VenueRepository {
     @Override
     public Venue findByID(long id) {

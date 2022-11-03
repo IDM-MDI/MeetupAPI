@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 
-import static com.modsen.meetup.api.repository.query.EventQuery.DELETE_QUERY;
-import static com.modsen.meetup.api.repository.query.EventQuery.FIND_BY_STATUS_QUERY;
+import static com.modsen.meetup.api.repository.query.EntityQuery.*;
+import static com.modsen.meetup.api.repository.query.EventQuery.*;
 
 @Repository
 public class BaseEventRepository implements EventRepository {
@@ -25,9 +25,8 @@ public class BaseEventRepository implements EventRepository {
     @Override
     public Event findByID(long id) {
         try (Session session = sessionFactory.openSession()) {
-            return (Event) session.createQuery("SELECT e FROM Event e " +
-                    "WHERE id = :id")
-                    .setParameter("id", id)
+            return (Event) session.createQuery(FIND_BY_ID_QUERY)
+                    .setParameter(ID, id)
                     .getSingleResult();
         }
     }
@@ -42,9 +41,9 @@ public class BaseEventRepository implements EventRepository {
     public List<Event> findEventsByStatus(PaginationInfo pagination, String status) {
         try (Session session = sessionFactory.openSession()) {
             return ((List<Event>) session.createQuery(FIND_BY_STATUS_QUERY)
-                    .setParameter("status", status)
-                    .setParameter("filter", pagination.getFilter())
-                    .setParameter("sort", pagination.getSort())
+                    .setParameter(STATUS, status)
+                    .setParameter(FILTER, pagination.getFilter())
+                    .setParameter(SORT, pagination.getSort())
                     .setMaxResults((int) pagination.getSize())
                     .setFirstResult((int) pagination.getPage())
                     .list());
@@ -66,6 +65,7 @@ public class BaseEventRepository implements EventRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.update(event);
+            session.getTransaction().commit();
         }
         return findByID(event.getId());
     }
@@ -74,7 +74,7 @@ public class BaseEventRepository implements EventRepository {
     public Event delete(long id) {
         try (Session session = sessionFactory.openSession()) {
             session.createQuery(DELETE_QUERY)
-                    .setParameter("id", id)
+                    .setParameter(ID, id)
                     .executeUpdate();
         }
         return findByID(id);

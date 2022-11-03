@@ -4,8 +4,8 @@ import com.modsen.meetup.api.entity.Manager;
 
 public interface ManagerRepository {
     Manager findByID(long id);
-    Manager findByFullName(String name, String surname, String lastname);
+    Manager findByFullName(Manager manager);
+    boolean isManagerExistByFullName(Manager manager);
     boolean isManagerExistByID(long id);
-    boolean isManagerExistByName(String name);
     Manager save(Manager manager);
 }

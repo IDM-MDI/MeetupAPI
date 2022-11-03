@@ -21,7 +21,7 @@ public class EventController {
     }
 
     @GetMapping()
-    public ResponsePage<EventDto> getActiveEvents(@RequestParam(required = false) PaginationInfo pagination) {
+    public ResponsePage<EventDto> getActiveEvents(@RequestParam(required = false) PaginationInfo pagination) throws ModelException {
         return service.findByActivePage(paginationFilter(pagination));
     }
 
@@ -37,7 +37,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) {
+    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) throws ModelException {
         return service.delete(id);
     }
 }
