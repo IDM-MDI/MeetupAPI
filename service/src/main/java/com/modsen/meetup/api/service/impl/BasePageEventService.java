@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.modsen.meetup.api.entity.EntityName.EVENT;
-import static com.modsen.meetup.api.entity.EntityStatus.ACTIVE;
 import static com.modsen.meetup.api.util.ResponseStatusUtil.pageFoundResponse;
 import static com.modsen.meetup.api.util.ResponseStatusUtil.pageNotFoundResponse;
 

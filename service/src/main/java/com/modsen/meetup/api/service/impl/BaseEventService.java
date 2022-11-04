@@ -44,9 +44,6 @@ public class BaseEventService implements EventService {
 
     @Override
     public EventDto findByID(long id) throws ServiceException {
-        if(!repository.isEventExistByID(id)) {
-            throw new ServiceException(ENTITY_NOT_FOUND.toString());
-        }
         return eventMapper.toDto(
                 repository.findByID(id)
                         .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString())));

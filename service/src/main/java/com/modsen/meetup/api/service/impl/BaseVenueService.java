@@ -8,8 +8,6 @@ import com.modsen.meetup.api.util.impl.VenueModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_FOUND;
 import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_VALID;
 import static com.modsen.meetup.api.validator.VenueValidator.isVenueValid;

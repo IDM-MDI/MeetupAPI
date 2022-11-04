@@ -12,6 +12,7 @@ import javax.persistence.PersistenceException;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.modsen.meetup.api.exception.PersistenceCode.ERROR_WHILE_SAVE;
 import static com.modsen.meetup.api.repository.query.EntityQuery.ID;
 import static com.modsen.meetup.api.repository.query.ManagerQuery.*;
 
@@ -61,7 +62,7 @@ public class BaseManagerRepository implements ManagerRepository {
         try (Session session = sessionFactory.openSession()) {
             Long id = (Long) session.save(manager);
             return findByID(id)
-                    .orElseThrow(() -> new PersistenceException(""));
+                    .orElseThrow(() -> new PersistenceException(ERROR_WHILE_SAVE.toString()));
         }
     }
 }

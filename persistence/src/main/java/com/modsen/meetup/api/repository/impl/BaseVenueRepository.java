@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-import java.util.Objects;
 import java.util.Optional;
 
+import static com.modsen.meetup.api.exception.PersistenceCode.ERROR_WHILE_SAVE;
 import static com.modsen.meetup.api.repository.query.EntityQuery.ID;
 import static com.modsen.meetup.api.repository.query.EntityQuery.NAME;
 import static com.modsen.meetup.api.repository.query.VenueQuery.FIND_BY_ID;
@@ -66,6 +66,6 @@ public class BaseVenueRepository implements VenueRepository {
             id = (Long) session.save(venue);
         }
         return findByID(id)
-                .orElseThrow(() -> new PersistenceException(""));
+                .orElseThrow(() -> new PersistenceException(ERROR_WHILE_SAVE.toString()));
     }
 }

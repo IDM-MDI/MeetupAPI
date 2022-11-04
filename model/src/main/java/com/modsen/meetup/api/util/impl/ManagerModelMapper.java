@@ -5,8 +5,6 @@ import com.modsen.meetup.api.entity.Manager;
 import com.modsen.meetup.api.util.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;

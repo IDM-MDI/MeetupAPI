@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.modsen.meetup.api.entity.EntityStatus.DELETED;
+import static com.modsen.meetup.api.exception.PersistenceCode.*;
 import static com.modsen.meetup.api.repository.query.EntityQuery.*;
 import static com.modsen.meetup.api.repository.query.EventQuery.*;
 
@@ -46,8 +47,8 @@ public class BaseEventRepository implements EventRepository {
     @SuppressWarnings("unchecked")
     public List<Event> findEventsByStatus(PaginationInfo pagination, String status) {
         try (Session session = sessionFactory.openSession()) {
-            return ((List<Event>) createPageQuery(pagination, status, session)
-                    .getResultList());
+            return createPageQuery(pagination, status, session)
+                    .getResultList();
         }
     }
 
@@ -60,7 +61,7 @@ public class BaseEventRepository implements EventRepository {
             session.getTransaction().commit();
         }
         return findByID(id)
-                .orElseThrow(() -> new PersistenceException(""));
+                .orElseThrow(() -> new PersistenceException(ERROR_WHILE_SAVE.toString()));
     }
 
     @Override
@@ -71,7 +72,7 @@ public class BaseEventRepository implements EventRepository {
             session.getTransaction().commit();
         }
         return findByID(event.getId())
-                .orElseThrow(() -> new PersistenceException(""));
+                .orElseThrow(() -> new PersistenceException(ERROR_WHILE_UPDATE.toString()));
     }
 
     @Override
@@ -85,7 +86,7 @@ public class BaseEventRepository implements EventRepository {
             session.getTransaction().commit();
         }
         return findByID(id)
-                .orElseThrow(() -> new PersistenceException(""));
+                .orElseThrow(() -> new PersistenceException(ERROR_WHILE_DELETE.toString()));
     }
 
     private Query createPageQuery(PaginationInfo pagination, String status, Session session) {

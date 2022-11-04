@@ -5,13 +5,11 @@ import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.ManagerRepository;
 import com.modsen.meetup.api.service.ManagerService;
 import com.modsen.meetup.api.util.impl.ManagerModelMapper;
-import com.modsen.meetup.api.validator.ObjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
-import static com.modsen.meetup.api.exception.ServiceExceptionCode.*;
+import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_FOUND;
+import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_VALID;
 import static com.modsen.meetup.api.validator.ManagerValidator.isManagerValid;
 
 @Service
@@ -28,9 +26,6 @@ public class BaseManagerService implements ManagerService {
 
     @Override
     public ManagerDto findByID(long id) throws ServiceException {
-        if(!repository.isManagerExistByID(id)) {
-            throw new ServiceException(ENTITY_NOT_FOUND.toString());
-        }
         return managerMapper.toDto(
                 repository.findByID(id)
                         .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString()))
