@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.modsen.meetup.api.exception.PersistenceCode.ERROR_WHILE_SAVE;

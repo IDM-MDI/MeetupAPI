@@ -1,6 +1,5 @@
 package com.modsen.meetup.api.repository.impl;
 
-import com.modsen.meetup.api.entity.Manager;
 import com.modsen.meetup.api.entity.Venue;
 import com.modsen.meetup.api.repository.VenueRepository;
 import org.hibernate.Session;
