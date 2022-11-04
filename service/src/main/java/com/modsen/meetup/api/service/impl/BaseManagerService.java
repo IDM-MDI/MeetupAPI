@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_FOUND;
 import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_VALID;
+import static com.modsen.meetup.api.util.ManagerUtil.getFullName;
 import static com.modsen.meetup.api.validator.ManagerValidator.isManagerValid;
 
 @Service
@@ -34,9 +35,8 @@ public class BaseManagerService implements ManagerService {
 
     @Override
     public ManagerDto findByFullName(ManagerDto manager) throws ServiceException {
-        String fullName = manager.getName() + SPACE + manager.getSurname() + SPACE + manager.getLastname();
         return managerMapper.toDto(
-                repository.findByFullName(fullName)
+                repository.findByFullName(getFullName(manager))
                         .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString()))
         );
     }
@@ -48,8 +48,7 @@ public class BaseManagerService implements ManagerService {
 
     @Override
     public boolean isManagerExistByFullName(ManagerDto manager) {
-        String fullName = manager.getName() + SPACE + manager.getSurname() + SPACE + manager.getLastname();
-        return repository.isManagerExistByFullName(fullName);
+        return repository.isManagerExistByFullName(getFullName(manager));
     }
 
     @Override

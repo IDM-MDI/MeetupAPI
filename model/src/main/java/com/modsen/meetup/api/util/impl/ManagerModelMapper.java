@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.modsen.meetup.api.util.ManagerUtil.getFullName;
+
 @Component
 public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
     @Override
@@ -21,7 +23,7 @@ public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
                 .name(dto.getName())
                 .surname(dto.getSurname())
                 .lastname(dto.getLastname())
-                .fullName(dto.getName() + " " + dto.getSurname() + " " + dto.getLastname())
+                .fullName(getFullName(dto))
                 .build();
     }
 

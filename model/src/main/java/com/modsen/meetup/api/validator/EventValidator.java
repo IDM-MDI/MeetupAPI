@@ -1,6 +1,8 @@
 package com.modsen.meetup.api.validator;
 
 import com.modsen.meetup.api.dto.EventDto;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static com.modsen.meetup.api.validator.ManagerValidator.isManagerValid;
@@ -18,10 +20,14 @@ public class EventValidator {
     }
 
     private static boolean isEventInsideValid(EventDto event) {
-        return isTopicValid(event.getTopic());
+        return isTopicValid(event.getTopic()) && isDateValid(event.getDate());
     }
 
     private static boolean isTopicValid(String topic) {
         return !isStringEmpty(topic) && topic.length() < 255;
+    }
+
+    private static boolean isDateValid(LocalDateTime time) {
+        return Objects.nonNull(time) && time.isAfter(LocalDateTime.now());
     }
 }
