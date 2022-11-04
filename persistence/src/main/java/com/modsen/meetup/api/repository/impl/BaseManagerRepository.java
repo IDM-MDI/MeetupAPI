@@ -1,6 +1,7 @@
 package com.modsen.meetup.api.repository.impl;
 
 import com.modsen.meetup.api.entity.Manager;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.repository.ManagerRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 import static com.modsen.meetup.api.exception.PersistenceCode.ERROR_WHILE_SAVE;
@@ -57,7 +57,7 @@ public class BaseManagerRepository implements ManagerRepository {
     }
 
     @Override
-    public Manager save(Manager manager) {
+    public Manager save(Manager manager) throws PersistenceException {
         try (Session session = sessionFactory.openSession()) {
             Long id = (Long) session.save(manager);
             return findByID(id)

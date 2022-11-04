@@ -3,6 +3,7 @@ package com.modsen.meetup.api.service.impl;
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.dto.ResponsePage;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.service.EventService;
 import com.modsen.meetup.api.service.PageEventService;
@@ -45,7 +46,7 @@ public class BasePageEventService implements PageEventService {
     }
 
     @Override
-    public ResponsePage<EventDto> save(EventDto event) throws ServiceException {
+    public ResponsePage<EventDto> save(EventDto event) throws ServiceException, PersistenceException {
         return ResponsePage.<EventDto>builder()
                 .data(List.of(service.save(event)))
                 .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
@@ -53,7 +54,7 @@ public class BasePageEventService implements PageEventService {
     }
 
     @Override
-    public ResponsePage<EventDto> update(EventDto event, long id) throws ServiceException {
+    public ResponsePage<EventDto> update(EventDto event, long id) throws ServiceException, PersistenceException {
         return ResponsePage.<EventDto>builder()
                 .data(List.of(service.update(event,id)))
                 .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
@@ -61,7 +62,7 @@ public class BasePageEventService implements PageEventService {
     }
 
     @Override
-    public ResponsePage<EventDto> delete(long id) throws ServiceException {
+    public ResponsePage<EventDto> delete(long id) throws ServiceException, PersistenceException {
         return ResponsePage.<EventDto>builder()
                 .data(List.of(service.delete(id)))
                 .status(ResponseStatusUtil.deleteResponse(EVENT.toString()))

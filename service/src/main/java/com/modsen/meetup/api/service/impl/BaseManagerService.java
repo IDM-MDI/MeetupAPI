@@ -1,6 +1,7 @@
 package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.ManagerDto;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.ManagerRepository;
 import com.modsen.meetup.api.service.ManagerService;
@@ -52,7 +53,7 @@ public class BaseManagerService implements ManagerService {
     }
 
     @Override
-    public ManagerDto save(ManagerDto manager) throws ServiceException {
+    public ManagerDto save(ManagerDto manager) throws ServiceException, PersistenceException {
         if(!isManagerValid(manager)) {
             throw new ServiceException(ENTITY_NOT_VALID.toString());
         }

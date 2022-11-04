@@ -1,6 +1,7 @@
 package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.VenueDto;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.VenueRepository;
 import com.modsen.meetup.api.service.VenueService;
@@ -51,7 +52,7 @@ public class BaseVenueService implements VenueService {
     }
 
     @Override
-    public VenueDto save(VenueDto venue) throws ServiceException {
+    public VenueDto save(VenueDto venue) throws ServiceException, PersistenceException {
         if(!isVenueValid(venue)) {
             throw new ServiceException(ENTITY_NOT_VALID.toString());
         }

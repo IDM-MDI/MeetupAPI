@@ -1,6 +1,7 @@
 package com.modsen.meetup.api.repository.impl;
 
 import com.modsen.meetup.api.entity.Venue;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.repository.VenueRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 import static com.modsen.meetup.api.exception.PersistenceCode.ERROR_WHILE_SAVE;
@@ -59,7 +59,7 @@ public class BaseVenueRepository implements VenueRepository {
     }
 
     @Override
-    public Venue save(Venue venue) {
+    public Venue save(Venue venue) throws PersistenceException {
         Long id;
         try (Session session = sessionFactory.openSession()) {
             id = (Long) session.save(venue);

@@ -2,6 +2,7 @@ package com.modsen.meetup.api.repository.impl;
 
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.entity.Event;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.repository.EventRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class BaseEventRepository implements EventRepository {
     }
 
     @Override
-    public Event save(Event event) {
+    public Event save(Event event) throws PersistenceException {
         Long id;
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -65,7 +65,7 @@ public class BaseEventRepository implements EventRepository {
     }
 
     @Override
-    public Event update(Event event) {
+    public Event update(Event event) throws PersistenceException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.update(event);
@@ -76,7 +76,7 @@ public class BaseEventRepository implements EventRepository {
     }
 
     @Override
-    public Event delete(long id) {
+    public Event delete(long id) throws PersistenceException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.createQuery(DELETE_QUERY)

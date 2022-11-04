@@ -3,6 +3,7 @@ package com.modsen.meetup.api.service.impl;
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.entity.Event;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.EventRepository;
 import com.modsen.meetup.api.service.EventService;
@@ -56,7 +57,7 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public EventDto save(EventDto event) throws ServiceException {
+    public EventDto save(EventDto event) throws ServiceException, PersistenceException {
         if (!isEventDtoValid(event)) {
             throw new ServiceException(ENTITY_NOT_VALID.toString());
         }
@@ -67,7 +68,7 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public EventDto update(EventDto event, long id) throws ServiceException {
+    public EventDto update(EventDto event, long id) throws ServiceException, PersistenceException {
         if(!isEventExistByID(id)) {
             throw new ServiceException(ENTITY_NOT_FOUND.toString());
         }
@@ -79,11 +80,11 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public EventDto delete(long id) {
+    public EventDto delete(long id) throws PersistenceException {
         return eventMapper.toDto(repository.delete(id));
     }
 
-    private void updateHandler(EventDto updatable, EventDto fromDB) throws ServiceException {
+    private void updateHandler(EventDto updatable, EventDto fromDB) throws ServiceException, PersistenceException {
         if(Objects.nonNull(updatable.getManager()) &&
                 !managerService.isManagerExistByFullName(updatable.getManager())) {
             updatable.setManager(managerService.save(updatable.getManager()));

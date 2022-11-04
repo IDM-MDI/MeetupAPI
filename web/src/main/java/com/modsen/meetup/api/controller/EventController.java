@@ -3,6 +3,7 @@ package com.modsen.meetup.api.controller;
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
 import com.modsen.meetup.api.dto.ResponsePage;
+import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.service.PageEventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) throws ServiceException {
+    public ResponsePage<EventDto> addEvent(@RequestBody EventDto event) throws ServiceException, PersistenceException {
         return service.save(event);
     }
 
@@ -48,12 +49,12 @@ public class EventController {
     }
     @PatchMapping("/{id}")
     public ResponsePage<EventDto> updateEvent(@PathVariable long id,
-                                              @RequestBody EventDto event) throws ServiceException {
+                                              @RequestBody EventDto event) throws ServiceException, PersistenceException {
         return service.update(event,id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) throws ServiceException {
+    public ResponsePage<EventDto> deleteEvent(@PathVariable long id) throws ServiceException, PersistenceException {
         return service.delete(id);
     }
 }
