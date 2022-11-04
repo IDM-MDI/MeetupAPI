@@ -2,9 +2,11 @@ package com.modsen.meetup.api.repository;
 
 import com.modsen.meetup.api.entity.Venue;
 
+import java.util.Optional;
+
 public interface VenueRepository {
-    Venue findByID(long id);
-    Venue findByName(String name);
+    Optional<Venue> findByID(long id);
+    Optional<Venue> findByName(String name);
     boolean isVenueExistByID(long id);
     boolean isVenueExistByName(String name);
     Venue save(Venue venue);

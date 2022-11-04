@@ -1,11 +1,14 @@
 package com.modsen.meetup.api.repository;
 
 import com.modsen.meetup.api.entity.Manager;
+import com.modsen.meetup.api.exception.PersistenceException;
+
+import java.util.Optional;
 
 public interface ManagerRepository {
-    Manager findByID(long id);
-    Manager findByFullName(Manager manager);
-    boolean isManagerExistByFullName(Manager manager);
+    Optional<Manager> findByID(long id);
+    Optional<Manager> findByFullName(String fullName);
+    boolean isManagerExistByFullName(String fullName);
     boolean isManagerExistByID(long id);
     Manager save(Manager manager);
 }

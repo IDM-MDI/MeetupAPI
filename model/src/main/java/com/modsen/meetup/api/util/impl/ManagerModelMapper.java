@@ -2,22 +2,21 @@ package com.modsen.meetup.api.util.impl;
 
 import com.modsen.meetup.api.dto.ManagerDto;
 import com.modsen.meetup.api.entity.Manager;
-import com.modsen.meetup.api.exception.ModelException;
 import com.modsen.meetup.api.util.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import static com.modsen.meetup.api.exception.ModelExceptionCode.MODEL_MAPPER_EXCEPTION;
 
 @Component
 public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
     @Override
-    public Manager toEntity(ManagerDto dto) throws ModelException {
+    public Manager toEntity(ManagerDto dto)  {
         if(Objects.isNull(dto)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return null;
         }
         return Manager.builder()
                 .id(dto.getId())
@@ -29,9 +28,9 @@ public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
     }
 
     @Override
-    public ManagerDto toDto(Manager entity) throws ModelException {
+    public ManagerDto toDto(Manager entity)  {
         if(Objects.isNull(entity)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return null;
         }
         return ManagerDto.builder()
                 .id(entity.getId())
@@ -42,28 +41,18 @@ public class ManagerModelMapper implements ModelMapper<Manager, ManagerDto> {
     }
 
     @Override
-    public List<Manager> toEntityList(List<ManagerDto> dtoList) throws ModelException {
+    public List<Manager> toEntityList(List<ManagerDto> dtoList)  {
         if(Objects.isNull(dtoList)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return Collections.emptyList();
         }
-        List<Manager> list = new ArrayList<>();
-        for (ManagerDto managerDto : dtoList) {
-            Manager manager = toEntity(managerDto);
-            list.add(manager);
-        }
-        return list;
+        return dtoList.stream().map(this::toEntity).toList();
     }
 
     @Override
-    public List<ManagerDto> toDtoList(List<Manager> entityList) throws ModelException {
+    public List<ManagerDto> toDtoList(List<Manager> entityList)  {
         if(Objects.isNull(entityList)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return Collections.emptyList();
         }
-        List<ManagerDto> list = new ArrayList<>();
-        for (Manager manager : entityList) {
-            ManagerDto managerDto = toDto(manager);
-            list.add(managerDto);
-        }
-        return list;
+        return entityList.stream().map(this::toDto).toList();
     }
 }

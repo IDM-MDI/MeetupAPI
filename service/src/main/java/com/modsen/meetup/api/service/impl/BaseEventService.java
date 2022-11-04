@@ -1,25 +1,24 @@
 package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.EventDto;
-import com.modsen.meetup.api.dto.ManagerDto;
 import com.modsen.meetup.api.dto.PaginationInfo;
-import com.modsen.meetup.api.dto.ResponsePage;
 import com.modsen.meetup.api.entity.Event;
-import com.modsen.meetup.api.exception.ModelException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.EventRepository;
 import com.modsen.meetup.api.service.EventService;
 import com.modsen.meetup.api.service.ManagerService;
 import com.modsen.meetup.api.service.VenueService;
-import com.modsen.meetup.api.util.ResponseStatusUtil;
 import com.modsen.meetup.api.util.impl.EventModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
-import static com.modsen.meetup.api.entity.EntityName.EVENT;
 import static com.modsen.meetup.api.entity.EntityStatus.ACTIVE;
+import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_FOUND;
+import static com.modsen.meetup.api.exception.ServiceExceptionCode.ENTITY_NOT_VALID;
+import static com.modsen.meetup.api.util.EventUtil.uniteUpdatableEvent;
 import static com.modsen.meetup.api.validator.EventValidator.isEventDtoValid;
 
 @Service
@@ -44,55 +43,61 @@ public class BaseEventService implements EventService {
     }
 
     @Override
-    public ResponsePage<EventDto> findByID(long id) throws ModelException, ServiceException {
+    public EventDto findByID(long id) throws ServiceException {
         if(!repository.isEventExistByID(id)) {
-            throw new ServiceException(""); //TODO:FINISH EXCEPTION MESSAGE
+            throw new ServiceException(ENTITY_NOT_FOUND.toString());
         }
-        return ResponsePage.<EventDto>builder()
-                .data(List.of(eventMapper.toDto(repository.findByID(id))))
-                .status(ResponseStatusUtil.byIdFoundResponse(EVENT.toString()))
-                .build();
+        return eventMapper.toDto(
+                repository.findByID(id)
+                        .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString())));
+
     }
 
     @Override
-    public ResponsePage<EventDto> findByActivePage(PaginationInfo paginationInfo) throws ModelException {
-        return ResponsePage.<EventDto>builder()
-                .data(eventMapper.toDtoList(repository.findEventsByStatus(paginationInfo, ACTIVE.name())))
-                .paginationInfo(paginationInfo)
-                .status(ResponseStatusUtil.pageFoundResponse(EVENT.toString()))
-                .build();
+    public List<EventDto> findByActivePage(PaginationInfo paginationInfo) {
+        return eventMapper.toDtoList(repository.findEventsByStatus(paginationInfo, ACTIVE.name()));
     }
 
     @Override
-    public ResponsePage<EventDto> save(EventDto event) throws ModelException, ServiceException {
+    public EventDto save(EventDto event) throws ServiceException {
         if (!isEventDtoValid(event)) {
-            throw new ServiceException(""); //TODO:FINISH EXCEPTION MESSAGE
+            throw new ServiceException(ENTITY_NOT_VALID.toString());
         }
         event.setManager(managerService.save(event.getManager()));
         event.setVenue(venueService.save(event.getVenue()));
-
-        return ResponsePage.<EventDto>builder()
-                .data(List.of(eventMapper.toDto(repository.save(eventMapper.toEntity(event)))))
-                .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
-                .build();
+        event.setStatus(ACTIVE.name());
+        return eventMapper.toDto(repository.save(eventMapper.toEntity(event)));
     }
 
     @Override
-    public ResponsePage<EventDto> update(EventDto event, long id) throws ModelException {
+    public EventDto update(EventDto event, long id) throws ServiceException {
+        if(!isEventExistByID(id)) {
+            throw new ServiceException(ENTITY_NOT_FOUND.toString());
+        }
+        EventDto fromDB = findByID(id);
+        updateHandler(event,fromDB);
         Event updatableEvent = eventMapper.toEntity(event);
-        updatableEvent.setId(id);
-
-        return ResponsePage.<EventDto>builder()
-                .data(List.of(eventMapper.toDto(repository.update(updatableEvent))))
-                .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
-                .build();
+        Event readyToUpdate = uniteUpdatableEvent(updatableEvent, eventMapper.toEntity(fromDB));
+        return eventMapper.toDto(repository.update(readyToUpdate));
     }
 
     @Override
-    public ResponsePage<EventDto> delete(long id) throws ModelException {
-        return ResponsePage.<EventDto>builder()
-                .data(List.of(eventMapper.toDto(repository.delete(id))))
-                .status(ResponseStatusUtil.deleteResponse(EVENT.toString()))
-                .build();
+    public EventDto delete(long id) {
+        return eventMapper.toDto(repository.delete(id));
+    }
+
+    private void updateHandler(EventDto updatable, EventDto fromDB) throws ServiceException {
+        if(Objects.nonNull(updatable.getManager()) &&
+                !managerService.isManagerExistByFullName(updatable.getManager())) {
+            updatable.setManager(managerService.save(updatable.getManager()));
+        } else {
+            updatable.setManager(fromDB.getManager());
+        }
+        if(Objects.nonNull(updatable.getVenue()) &&
+                !venueService.isVenueExistByName(updatable.getVenue().getName())) {
+            updatable.setVenue(venueService.save(updatable.getVenue()));
+        } else {
+            updatable.setVenue(fromDB.getVenue());
+        }
     }
 }

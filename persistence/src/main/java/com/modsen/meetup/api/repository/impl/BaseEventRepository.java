@@ -8,9 +8,13 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
+import static com.modsen.meetup.api.entity.EntityStatus.DELETED;
 import static com.modsen.meetup.api.repository.query.EntityQuery.*;
 import static com.modsen.meetup.api.repository.query.EventQuery.*;
 
@@ -23,41 +27,40 @@ public class BaseEventRepository implements EventRepository {
         this.sessionFactory = sessionFactory;
     }
     @Override
-    public Event findByID(long id) {
+    public Optional<Event> findByID(long id) {
         try (Session session = sessionFactory.openSession()) {
-            return (Event) session.createQuery(FIND_BY_ID_QUERY)
+            return Optional.of((Event) session.createQuery(FIND_BY_ID_QUERY)
                     .setParameter(ID, id)
-                    .getSingleResult();
+                    .getSingleResult());
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         }
     }
 
     @Override
     public boolean isEventExistByID(long id) {
-        return Objects.nonNull(findByID(id));
+        return findByID(id).isPresent();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Event> findEventsByStatus(PaginationInfo pagination, String status) {
         try (Session session = sessionFactory.openSession()) {
-            return ((List<Event>) session.createQuery(FIND_BY_STATUS_QUERY)
-                    .setParameter(STATUS, status)
-                    .setParameter(FILTER, pagination.getFilter())
-                    .setParameter(SORT, pagination.getSort())
-                    .setMaxResults((int) pagination.getSize())
-                    .setFirstResult((int) pagination.getPage())
-                    .list());
+            return ((List<Event>) createPageQuery(pagination, status, session)
+                    .getResultList());
         }
     }
 
     @Override
     public Event save(Event event) {
+        Long id;
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            Event savedEvent = (Event) session.save(event);
+            id = (Long) session.save(event);
             session.getTransaction().commit();
-            return savedEvent;
         }
+        return findByID(id)
+                .orElseThrow(() -> new PersistenceException(""));
     }
 
     @Override
@@ -67,16 +70,35 @@ public class BaseEventRepository implements EventRepository {
             session.update(event);
             session.getTransaction().commit();
         }
-        return findByID(event.getId());
+        return findByID(event.getId())
+                .orElseThrow(() -> new PersistenceException(""));
     }
 
     @Override
     public Event delete(long id) {
         try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
             session.createQuery(DELETE_QUERY)
                     .setParameter(ID, id)
+                    .setParameter(STATUS,DELETED.name())
                     .executeUpdate();
+            session.getTransaction().commit();
         }
-        return findByID(id);
+        return findByID(id)
+                .orElseThrow(() -> new PersistenceException(""));
+    }
+
+    private Query createPageQuery(PaginationInfo pagination, String status, Session session) {
+        boolean haveFilter = !pagination.getFilter().isBlank();
+        String query = haveFilter ? FIND_BY_FILTER_AND_STATUS_QUERY : FIND_BY_STATUS_QUERY;
+        Query sessionQuery = session.createQuery(query)
+                .setParameter(STATUS, status)
+                .setParameter(SORT, pagination.getSort());
+        if(haveFilter) {
+            sessionQuery.setParameter(FILTER, pagination.getFilter());
+        }
+        return sessionQuery
+                .setMaxResults((int) pagination.getSize())
+                .setFirstResult((int) pagination.getPage());
     }
 }

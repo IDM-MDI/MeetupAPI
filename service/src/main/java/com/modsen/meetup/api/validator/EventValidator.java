@@ -7,5 +7,5 @@ public class EventValidator {
 
     public static boolean isEventDtoValid(EventDto event) {
         return true;
-    }
+    }   //TODO:FINISH VALIDATOR
 }

@@ -2,17 +2,14 @@ package com.modsen.meetup.api.util.impl;
 
 import com.modsen.meetup.api.dto.EventDto;
 import com.modsen.meetup.api.entity.Event;
-import com.modsen.meetup.api.exception.ModelException;
-import com.modsen.meetup.api.exception.ModelExceptionCode;
 import com.modsen.meetup.api.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import static com.modsen.meetup.api.exception.ModelExceptionCode.MODEL_MAPPER_EXCEPTION;
 
 @Component
 public class EventModelMapper implements ModelMapper<Event, EventDto> {
@@ -26,9 +23,9 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
     }
 
     @Override
-    public Event toEntity(EventDto dto) throws ModelException {
+    public Event toEntity(EventDto dto)  {
         if(Objects.isNull(dto)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return null;
         }
         return Event.builder()
                 .id(dto.getId())
@@ -37,13 +34,14 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
                 .description(dto.getDescription())
                 .date(dto.getDate())
                 .venue(venueMapper.toEntity(dto.getVenue()))
+                .status(dto.getStatus())
                 .build();
     }
 
     @Override
-    public EventDto toDto(Event entity) throws ModelException {
+    public EventDto toDto(Event entity)  {
         if(Objects.isNull(entity)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return null;
         }
         return EventDto.builder()
                 .id(entity.getId())
@@ -52,32 +50,28 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
                 .description(entity.getDescription())
                 .date(entity.getDate())
                 .venue(venueMapper.toDto(entity.getVenue()))
+                .status(entity.getStatus())
                 .build();
     }
 
     @Override
-    public List<Event> toEntityList(List<EventDto> dtoList) throws ModelException {
+    public List<Event> toEntityList(List<EventDto> dtoList)  {
         if(Objects.isNull(dtoList)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return Collections.emptyList();
         }
-        List<Event> list = new ArrayList<>();
-        for (EventDto eventDto : dtoList) {
-            Event event = toEntity(eventDto);
-            list.add(event);
-        }
-        return list;
+        return dtoList.stream().map(this::toEntity).toList();
     }
 
     @Override
-    public List<EventDto> toDtoList(List<Event> entityList) throws ModelException {
+    public List<EventDto> toDtoList(List<Event> entityList)  {
         if(Objects.isNull(entityList)) {
-            throw new ModelException(MODEL_MAPPER_EXCEPTION.toString());
+            return Collections.emptyList();
         }
         List<EventDto> list = new ArrayList<>();
         for (Event event : entityList) {
             EventDto eventDto = toDto(event);
             list.add(eventDto);
         }
-        return list;
+        return entityList.stream().map(this::toDto).toList();
     }
 }

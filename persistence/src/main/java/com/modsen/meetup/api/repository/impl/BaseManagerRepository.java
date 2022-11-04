@@ -7,7 +7,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.modsen.meetup.api.repository.query.EntityQuery.ID;
 import static com.modsen.meetup.api.repository.query.ManagerQuery.*;
@@ -22,37 +25,43 @@ public class BaseManagerRepository implements ManagerRepository {
     }
 
     @Override
-    public Manager findByID(long id) {
+    public Optional<Manager> findByID(long id) {
         try (Session session = sessionFactory.openSession()) {
-            return (Manager) session.createQuery(FIND_BY_ID)
+            return Optional.of((Manager) session.createQuery(FIND_BY_ID)
                     .setParameter(ID, id)
-                    .getSingleResult();
+                    .getSingleResult());
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         }
     }
 
     @Override
-    public Manager findByFullName(Manager manager) {
+    public Optional<Manager> findByFullName(String fullName) {
         try (Session session = sessionFactory.openSession()) {
-            return (Manager) session.createQuery(FIND_BY_FULL_NAME)
-                    .setParameter(FULL_NAME, manager.getFullName())
-                    .getSingleResult();
+            return Optional.of((Manager) session.createQuery(FIND_BY_FULL_NAME)
+                    .setParameter(FULL_NAME, fullName)
+                    .getSingleResult());
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         }
     }
 
     @Override
-    public boolean isManagerExistByFullName(Manager manager) {
-        return Objects.nonNull(findByFullName(manager));
+    public boolean isManagerExistByFullName(String fullName) {
+        return findByFullName(fullName).isPresent();
     }
 
     @Override
     public boolean isManagerExistByID(long id) {
-        return Objects.nonNull(findByID(id));
+        return findByID(id).isPresent();
     }
 
     @Override
     public Manager save(Manager manager) {
         try (Session session = sessionFactory.openSession()) {
-            return (Manager) session.save(manager);
+            Long id = (Long) session.save(manager);
+            return findByID(id)
+                    .orElseThrow(() -> new PersistenceException(""));
         }
     }
 }

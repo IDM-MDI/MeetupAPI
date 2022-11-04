@@ -8,7 +8,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.modsen.meetup.api.repository.query.EntityQuery.ID;
 import static com.modsen.meetup.api.repository.query.EntityQuery.NAME;
@@ -25,37 +28,44 @@ public class BaseVenueRepository implements VenueRepository {
     }
 
     @Override
-    public Venue findByID(long id) {
+    public Optional<Venue> findByID(long id) {
         try (Session session = sessionFactory.openSession()) {
-            return (Venue) session.createQuery(FIND_BY_ID)
+            return Optional.of((Venue) session.createQuery(FIND_BY_ID)
                     .setParameter(ID, id)
-                    .getSingleResult();
+                    .getSingleResult());
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         }
     }
 
     @Override
-    public Venue findByName(String name) {
+    public Optional<Venue> findByName(String name) {
         try (Session session = sessionFactory.openSession()) {
-            return (Venue) session.createQuery(FIND_BY_NAME)
+            return Optional.of((Venue) session.createQuery(FIND_BY_NAME)
                     .setParameter(NAME, name)
-                    .getSingleResult();
+                    .getSingleResult());
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         }
     }
 
     @Override
     public boolean isVenueExistByID(long id) {
-        return Objects.nonNull(findByID(id));
+        return findByID(id).isPresent();
     }
 
     @Override
     public boolean isVenueExistByName(String name) {
-        return Objects.nonNull(findByName(name));
+        return findByName(name).isPresent();
     }
 
     @Override
     public Venue save(Venue venue) {
+        Long id;
         try (Session session = sessionFactory.openSession()) {
-            return (Venue) session.save(venue);
+            id = (Long) session.save(venue);
         }
+        return findByID(id)
+                .orElseThrow(() -> new PersistenceException(""));
     }
 }
