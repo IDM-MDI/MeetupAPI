@@ -2,8 +2,6 @@ package com.modsen.meetup.api.util;
 
 import com.modsen.meetup.api.entity.Event;
 
-import java.util.Objects;
-
 import static com.modsen.meetup.api.validator.EventValidator.isDateValid;
 import static com.modsen.meetup.api.validator.ObjectValidator.isNumberEqLessZero;
 import static com.modsen.meetup.api.validator.ObjectValidator.isStringEmpty;
