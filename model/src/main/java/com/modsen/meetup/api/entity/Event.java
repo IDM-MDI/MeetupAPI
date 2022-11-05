@@ -30,11 +30,11 @@ public class Event {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "managerID")
+    @JoinColumn(name = "manager_id")
     private Manager manager;
 
     @ManyToOne
-    @JoinColumn(name = "venueID")
+    @JoinColumn(name = "venue_id")
     private Venue venue;
 
     @Column(name = "topic")

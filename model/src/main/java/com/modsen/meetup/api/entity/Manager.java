@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "manager")
+@Table(name = "`manager`")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,6 +36,6 @@ public class Manager {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "fullName", unique = true, nullable = false)
+    @Column(name = "fullname", unique = true, nullable = false)
     private String fullName;
 }

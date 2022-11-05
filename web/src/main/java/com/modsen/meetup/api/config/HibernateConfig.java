@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+import static com.modsen.meetup.api.validator.ObjectValidator.isStringEmpty;
+
 @Configuration
 @EnableTransactionManagement
 public class HibernateConfig {
@@ -32,6 +34,9 @@ public class HibernateConfig {
 
     @Value("${datasource.hbm2ddl}")
     private String hbm2ddl;
+
+    @Value("${datasource.schema}")
+    private String schema;
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -49,7 +54,9 @@ public class HibernateConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-
+        if(!isStringEmpty(schema)) {
+            dataSource.setSchema(schema);
+        }
         return dataSource;
     }
 

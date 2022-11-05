@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "venue")
+@Table(name = "`venue`")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
