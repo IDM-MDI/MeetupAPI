@@ -1,11 +1,13 @@
 package com.modsen.meetup.api.service.impl;
 
 import com.modsen.meetup.api.dto.ManagerDto;
+import com.modsen.meetup.api.entity.Manager;
 import com.modsen.meetup.api.exception.PersistenceException;
 import com.modsen.meetup.api.exception.ServiceException;
 import com.modsen.meetup.api.repository.ManagerRepository;
 import com.modsen.meetup.api.service.ManagerService;
 import com.modsen.meetup.api.util.impl.ManagerModelMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import static com.modsen.meetup.api.util.ManagerUtil.getFullName;
 import static com.modsen.meetup.api.validator.ManagerValidator.isManagerValid;
 
 @Service
+@Slf4j
 public class BaseManagerService implements ManagerService {
 
     private final ManagerRepository repository;
@@ -30,7 +33,10 @@ public class BaseManagerService implements ManagerService {
     public ManagerDto findByID(long id) throws ServiceException {
         return managerMapper.toDto(
                 repository.findByID(id)
-                        .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString()))
+                        .orElseThrow(() -> {
+                            log.error(ENTITY_NOT_FOUND.toString());
+                            return new ServiceException(ENTITY_NOT_FOUND.toString());
+                        })
         );
     }
 
@@ -38,7 +44,10 @@ public class BaseManagerService implements ManagerService {
     public ManagerDto findByFullName(ManagerDto manager) throws ServiceException {
         return managerMapper.toDto(
                 repository.findByFullName(getFullName(manager))
-                        .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString()))
+                        .orElseThrow(() -> {
+                            log.error(ENTITY_NOT_FOUND.toString());
+                            return new ServiceException(ENTITY_NOT_FOUND.toString());
+                        })
         );
     }
 
@@ -55,11 +64,14 @@ public class BaseManagerService implements ManagerService {
     @Override
     public ManagerDto save(ManagerDto manager) throws ServiceException, PersistenceException {
         if(!isManagerValid(manager)) {
+            log.error(ENTITY_NOT_VALID.toString());
             throw new ServiceException(ENTITY_NOT_VALID.toString());
         }
         if(isManagerExistByFullName(manager)) {
             return findByFullName(manager);
         }
-        return managerMapper.toDto(repository.save(managerMapper.toEntity(manager)));
+        Manager result = repository.save(managerMapper.toEntity(manager));
+        log.info("Manager {} was saved", result);
+        return managerMapper.toDto(result);
     }
 }

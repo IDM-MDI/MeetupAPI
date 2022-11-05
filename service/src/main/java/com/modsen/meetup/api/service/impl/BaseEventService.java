@@ -10,6 +10,8 @@ import com.modsen.meetup.api.service.EventService;
 import com.modsen.meetup.api.service.ManagerService;
 import com.modsen.meetup.api.service.VenueService;
 import com.modsen.meetup.api.util.impl.EventModelMapper;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import static com.modsen.meetup.api.util.EventUtil.uniteUpdatableEvent;
 import static com.modsen.meetup.api.validator.EventValidator.isEventDtoValid;
 
 @Service
+@Slf4j
 public class BaseEventService implements EventService {
     private final EventRepository repository;
     private final ManagerService managerService;
@@ -47,7 +50,10 @@ public class BaseEventService implements EventService {
     public EventDto findByID(long id) throws ServiceException {
         return eventMapper.toDto(
                 repository.findByID(id)
-                        .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString())));
+                        .orElseThrow(() -> {
+                            log.error(ENTITY_NOT_FOUND.toString());
+                            return new ServiceException(ENTITY_NOT_FOUND.toString());
+                        }));
 
     }
 
@@ -59,6 +65,7 @@ public class BaseEventService implements EventService {
     @Override
     public EventDto save(EventDto event) throws ServiceException, PersistenceException {
         if (!isEventDtoValid(event)) {
+            log.error(ENTITY_NOT_VALID.toString());
             throw new ServiceException(ENTITY_NOT_VALID.toString());
         }
         event.setManager(managerService.save(event.getManager()));
@@ -70,18 +77,23 @@ public class BaseEventService implements EventService {
     @Override
     public EventDto update(EventDto event, long id) throws ServiceException, PersistenceException {
         if(!isEventExistByID(id)) {
+            log.error(ENTITY_NOT_VALID.toString());
             throw new ServiceException(ENTITY_NOT_FOUND.toString());
         }
         EventDto fromDB = findByID(id);
         updateHandler(event,fromDB);
         Event updatableEvent = eventMapper.toEntity(event);
         Event readyToUpdate = uniteUpdatableEvent(updatableEvent, eventMapper.toEntity(fromDB));
-        return eventMapper.toDto(repository.update(readyToUpdate));
+        Event result = repository.update(readyToUpdate);
+        log.info("Event {} was updated", result);
+        return eventMapper.toDto(result);
     }
 
     @Override
     public EventDto delete(long id) throws PersistenceException {
-        return eventMapper.toDto(repository.delete(id));
+        Event result = repository.delete(id);
+        log.info("Event {} was successfully deleted", result);
+        return eventMapper.toDto(result);
     }
 
     private void updateHandler(EventDto updatable, EventDto fromDB) throws ServiceException, PersistenceException {
