@@ -18,15 +18,15 @@ public class EventValidator {
                 isManagerValid(event.getManager()) &&
                 isEventInsideValid(event);
     }
-    private static boolean isEventInsideValid(EventDto event) {
-        return isTopicValid(event.getTopic()) && isDateValid(event.getDate());
+    public static boolean isEventInsideValid(EventDto event) {
+        return Objects.nonNull(event) && isTopicValid(event.getTopic()) && isDateValid(event.getDate());
     }
 
-    private static boolean isTopicValid(String topic) {
+    public static boolean isTopicValid(String topic) {
         return !isStringEmpty(topic) && topic.length() < 255;
     }
 
-    private static boolean isDateValid(LocalDateTime time) {
+    public static boolean isDateValid(LocalDateTime time) {
         return Objects.nonNull(time) && time.isAfter(LocalDateTime.now());
     }
 }

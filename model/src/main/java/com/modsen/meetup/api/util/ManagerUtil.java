@@ -30,6 +30,6 @@ public class ManagerUtil {
         if(!isStringEmpty(manager.getLastname())) {
             builder.append(manager.getLastname());
         }
-        return builder.toString();
+        return builder.toString().trim();
     }
 }

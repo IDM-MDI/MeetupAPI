@@ -7,18 +7,34 @@ import static org.junit.jupiter.api.Assertions.*;
 class EventModelMapperTest {
 
     @Test
-    void toEntity() {
+    void toEntityShouldCorrect() {
     }
 
     @Test
-    void toDto() {
+    void toDtoShouldCorrect() {
     }
 
     @Test
-    void toEntityList() {
+    void toEntityListShouldCorrect() {
     }
 
     @Test
-    void toDtoList() {
+    void toDtoListShouldCorrect() {
+    }
+
+    @Test
+    void toEntityShouldIncorrectByNull() {
+    }
+
+    @Test
+    void toDtoShouldIncorrectByNull() {
+    }
+
+    @Test
+    void toEntityListShouldIncorrectByNull() {
+    }
+
+    @Test
+    void toDtoListShouldIncorrectByNull() {
     }
 }
