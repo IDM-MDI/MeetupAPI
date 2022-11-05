@@ -6,6 +6,7 @@ import com.modsen.meetup.api.repository.ManagerRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -20,7 +21,7 @@ public class BaseManagerRepository implements ManagerRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public BaseManagerRepository(SessionFactory sessionFactory) {
+    public BaseManagerRepository(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

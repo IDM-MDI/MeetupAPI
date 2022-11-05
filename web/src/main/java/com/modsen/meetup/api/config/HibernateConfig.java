@@ -37,7 +37,7 @@ public class HibernateConfig {
 
     @Value("${datasource.schema}")
     private String schema;
-    @Bean
+    @Bean("sessionFactory")
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
@@ -47,7 +47,7 @@ public class HibernateConfig {
         return sessionFactory;
     }
 
-    @Bean
+    @Bean("dataSource")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
@@ -60,7 +60,7 @@ public class HibernateConfig {
         return dataSource;
     }
 
-    @Bean
+    @Bean("hibernateTransactionManager")
     public PlatformTransactionManager hibernateTransactionManager() {
         HibernateTransactionManager transactionManager
                 = new HibernateTransactionManager();

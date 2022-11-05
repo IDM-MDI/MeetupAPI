@@ -7,6 +7,7 @@ import com.modsen.meetup.api.repository.EventRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -24,7 +25,7 @@ public class BaseEventRepository implements EventRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public BaseEventRepository(SessionFactory sessionFactory) {
+    public BaseEventRepository(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
     @Override

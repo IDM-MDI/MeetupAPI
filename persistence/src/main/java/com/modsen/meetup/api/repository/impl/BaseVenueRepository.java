@@ -6,6 +6,7 @@ import com.modsen.meetup.api.repository.VenueRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -22,7 +23,7 @@ public class BaseVenueRepository implements VenueRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public BaseVenueRepository(SessionFactory sessionFactory) {
+    public BaseVenueRepository(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
