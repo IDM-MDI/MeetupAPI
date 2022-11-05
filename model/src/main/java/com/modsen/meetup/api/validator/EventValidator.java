@@ -18,7 +18,6 @@ public class EventValidator {
                 isManagerValid(event.getManager()) &&
                 isEventInsideValid(event);
     }
-
     private static boolean isEventInsideValid(EventDto event) {
         return isTopicValid(event.getTopic()) && isDateValid(event.getDate());
     }

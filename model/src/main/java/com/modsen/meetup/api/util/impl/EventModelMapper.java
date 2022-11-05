@@ -67,11 +67,6 @@ public class EventModelMapper implements ModelMapper<Event, EventDto> {
         if(Objects.isNull(entityList)) {
             return Collections.emptyList();
         }
-        List<EventDto> list = new ArrayList<>();
-        for (Event event : entityList) {
-            EventDto eventDto = toDto(event);
-            list.add(eventDto);
-        }
         return entityList.stream().map(this::toDto).toList();
     }
 }

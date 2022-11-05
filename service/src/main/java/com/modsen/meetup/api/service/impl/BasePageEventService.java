@@ -49,7 +49,7 @@ public class BasePageEventService implements PageEventService {
     public ResponsePage<EventDto> save(EventDto event) throws ServiceException, PersistenceException {
         return ResponsePage.<EventDto>builder()
                 .data(List.of(service.save(event)))
-                .status(ResponseStatusUtil.updateResponse(EVENT.toString()))
+                .status(ResponseStatusUtil.saveResponse(EVENT.toString()))
                 .build();
     }
 
