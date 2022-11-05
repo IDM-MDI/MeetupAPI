@@ -6,7 +6,7 @@ import com.modsen.meetup.api.exception.ServiceException;
 
 public interface VenueService {
     VenueDto findByID(long id) throws ServiceException;
-    VenueDto findByName(String name);
+    VenueDto findByName(String name) throws ServiceException;
     boolean isVenueExistByID(long id);
     boolean isVenueExistByName(String name);
     VenueDto save(VenueDto venue) throws ServiceException, PersistenceException;

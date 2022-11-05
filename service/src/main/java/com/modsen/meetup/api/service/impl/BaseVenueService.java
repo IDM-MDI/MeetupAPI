@@ -44,10 +44,10 @@ public class BaseVenueService implements VenueService {
     }
 
     @Override
-    public VenueDto findByName(String name) {
+    public VenueDto findByName(String name) throws ServiceException {
         return venueMapper.toDto(
                 repository.findByName(name)
-                        .orElseThrow(() -> new SecurityException(ENTITY_NOT_FOUND.toString()))
+                        .orElseThrow(() -> new ServiceException(ENTITY_NOT_FOUND.toString()))
         );
     }
 

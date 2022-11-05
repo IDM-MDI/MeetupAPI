@@ -104,10 +104,40 @@ class BaseManagerServiceTest {
         Assertions.assertTrue(service.isManagerExistByFullName(DTO));
     }
 
+    @SneakyThrows
     @Test
-    void saveShouldCorrect() {
+    void saveShouldCorrectExist() {
+        try (MockedStatic<ManagerValidator> validator = mockStatic(ManagerValidator.class)) {
+            when(ManagerValidator.isManagerValid(DTO))
+                    .thenReturn(true);
+            when(repository.isManagerExistByFullName(ENTITY.getFullName()))
+                    .thenReturn(true);
+            when(repository.findByFullName(ENTITY.getFullName()))
+                    .thenReturn(Optional.of(ENTITY));
+            when(managerMapper.toDto(ENTITY))
+                    .thenReturn(DTO);
+            ManagerDto actual = service.save(DTO);
+            Assertions.assertEquals(DTO,actual);
+        }
     }
-
+    @SneakyThrows
+    @Test
+    void saveShouldCorrectNotExist() {
+        try (MockedStatic<ManagerValidator> validator = mockStatic(ManagerValidator.class)) {
+            when(ManagerValidator.isManagerValid(DTO))
+                    .thenReturn(true);
+            when(repository.isManagerExistByFullName(ENTITY.getFullName()))
+                    .thenReturn(false);
+            when(managerMapper.toEntity(DTO))
+                    .thenReturn(ENTITY);
+            when(repository.save(ENTITY))
+                    .thenReturn(ENTITY);
+            when(managerMapper.toDto(ENTITY))
+                    .thenReturn(DTO);
+            ManagerDto actual = service.save(DTO);
+            Assertions.assertEquals(DTO,actual);
+        }
+    }
     @Test
     void saveShouldThrowServiceException() {
         try (MockedStatic<ManagerValidator> validator = mockStatic(ManagerValidator.class)) {
