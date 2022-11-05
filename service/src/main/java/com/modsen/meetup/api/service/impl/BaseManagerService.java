@@ -16,7 +16,7 @@ import static com.modsen.meetup.api.validator.ManagerValidator.isManagerValid;
 
 @Service
 public class BaseManagerService implements ManagerService {
-    private static final String SPACE = " ";
+
     private final ManagerRepository repository;
     private final ManagerModelMapper managerMapper;
 
