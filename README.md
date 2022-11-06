@@ -14,7 +14,7 @@ The application is created for organizing meetings, by person in one meeting pla
 
 ### Endpoints
 > About endpoints and api, you can introduce by running the application and following the [link](http://localhost:8080/swagger-ui/ )
-> ![Swagger-UI](https://github.com/IDM-MDI/MeetupAPI/media/swagger-ui.png)
+> ![Swagger-UI](https://github.com/IDM-MDI/MeetupAPI/blob/master/media/swagger-ui.png)
 
 ### Entity description
 * **Events** - it's a kind collection of people in one place, for spending time.
