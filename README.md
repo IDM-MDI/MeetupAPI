@@ -6,6 +6,7 @@
 The application is created for organizing meetings, by person in one meeting place.
 
 ### Used technologies
+* *Java 17*
 * *Spring Boot*
 * *Hibernate*
 * *Swagger-UI*
