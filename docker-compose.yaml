@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./web/src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=test_task
+    restart: always
+  app:
+    build: ./docker/app
+    ports:
+      - "8080:8080"
+    volumes:
+      - /docker/app:/app
+    restart: always
+    depends_on:
+      - db

@@ -46,7 +46,7 @@ The application is created for organizing meetings, by person in one meeting pla
 
 ### How to run
 * Create database with any name.
-* Copy sql script from *web/src/main/resources/db/sql/create_tables.sql*, paste to your script tool and execute.
+* Copy sql script from *web/src/main/resources/db/sql/docker-entrypoint-initdb.d*, paste to your script tool and execute.
 * Change properties to your own in *web/src/main/resources/application.properties* to connect with your database.
 * Build your application into a jar file by command in the root directory: </br>
   ***mvn clean package***
