@@ -13,6 +13,7 @@ The application is created for organizing meetings, by person in one meeting pla
 * *JUnit*
 * *Mockito*
 * *Lombok*
+* *Docker*
 
 ### Endpoints
 > About endpoints and api, you can introduce by running the application and following the [link](http://localhost:8080/swagger-ui/ )
