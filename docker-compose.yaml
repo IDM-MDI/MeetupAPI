@@ -12,11 +12,9 @@ services:
       - POSTGRES_DB=test_task
     restart: always
   app:
-    build: ./docker/app
+    build: .
     ports:
       - "8080:8080"
-    volumes:
-      - /docker/app:/app
     restart: always
     depends_on:
       - db
